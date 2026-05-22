@@ -1,0 +1,30 @@
+# syntax=docker/dockerfile:1.7
+
+# ============================================================
+# Dockerfile.test — образ для запуску тестів (lint + jest)
+# Використовується сервісом "test" у docker-compose та CI.
+# ============================================================
+FROM node:20-bookworm-slim
+
+ENV NODE_ENV=test
+WORKDIR /app
+
+RUN apt-get update -qq && \
+    apt-get install -y --no-install-recommends openssl ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
+
+# Усі залежності (включно з dev)
+COPY package.json package-lock.json* ./
+RUN npm ci
+
+# Prisma client
+COPY prisma ./prisma
+RUN npx prisma generate
+
+# Конфіги + код + тести
+COPY tsconfig.json jest.config.js .eslintrc.json .prettierrc ./
+COPY src   ./src
+COPY tests ./tests
+
+# Дефолтна команда — лінтер + юніт-тести
+CMD ["sh", "-c", "npm run lint && npm run test:unit"]

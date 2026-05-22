@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaskFlow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- Auth Screen -->
+    <div id="screen-auth" class="screen active">
+      <div class="auth-bg">
+        <div class="auth-glow"></div>
+        <div class="auth-grid"></div>
+      </div>
+      <div class="auth-container">
+        <div class="auth-brand">
+          <span class="brand-icon">⬡</span>
+          <span class="brand-name">TaskFlow</span>
+        </div>
+        <div class="auth-card">
+          <div class="auth-tabs">
+            <button class="auth-tab active" data-tab="login">Вхід</button>
+            <button class="auth-tab" data-tab="register">Реєстрація</button>
+          </div>
+
+          <form id="form-login" class="auth-form active">
+            <div class="field">
+              <label>Email</label>
+              <input type="email" id="login-email" placeholder="alice@example.com" required />
+            </div>
+            <div class="field">
+              <label>Пароль</label>
+              <input type="password" id="login-password" placeholder="••••••••" required />
+            </div>
+            <div id="login-error" class="form-error hidden"></div>
+            <button type="submit" class="btn-primary">Увійти</button>
+          </form>
+
+          <form id="form-register" class="auth-form">
+            <div class="field">
+              <label>Ім'я</label>
+              <input type="text" id="reg-name" placeholder="Ваше ім'я" required />
+            </div>
+            <div class="field">
+              <label>Email</label>
+              <input type="email" id="reg-email" placeholder="alice@example.com" required />
+            </div>
+            <div class="field">
+              <label>Пароль</label>
+              <input type="password" id="reg-password" placeholder="мін. 8 символів" required />
+            </div>
+            <div id="reg-error" class="form-error hidden"></div>
+            <button type="submit" class="btn-primary">Створити акаунт</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- App Screen -->
+    <div id="screen-app" class="screen">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-brand">
+          <span class="brand-icon">⬡</span>
+          <span class="brand-name">TaskFlow</span>
+        </div>
+
+        <nav class="sidebar-nav">
+          <a class="nav-item active" data-view="dashboard">
+            <span class="nav-icon">◈</span> Дашборд
+          </a>
+          <a class="nav-item" data-view="projects">
+            <span class="nav-icon">◉</span> Проєкти
+          </a>
+          <a class="nav-item" data-view="my-tasks">
+            <span class="nav-icon">◎</span> Мої задачі
+          </a>
+        </nav>
+
+        <div class="sidebar-projects">
+          <div class="sidebar-section-title">Проєкти</div>
+          <div id="sidebar-project-list"></div>
+          <button class="btn-new-project" id="btn-new-project-sidebar">+ Новий проєкт</button>
+        </div>
+
+        <div class="sidebar-user">
+          <div class="user-avatar" id="user-avatar">A</div>
+          <div class="user-info">
+            <div class="user-name" id="user-name">—</div>
+            <div class="user-email" id="user-email">—</div>
+          </div>
+          <button class="btn-logout" id="btn-logout" title="Вийти">↪</button>
+        </div>
+      </aside>
+
+      <!-- Main content -->
+      <main class="main">
+        <!-- Dashboard View -->
+        <div id="view-dashboard" class="view active">
+          <div class="view-header">
+            <h1 class="view-title">Дашборд</h1>
+          </div>
+          <div class="stats-grid" id="dashboard-stats">
+            <div class="stat-card">
+              <div class="stat-label">Всього проєктів</div>
+              <div class="stat-value" id="stat-projects">—</div>
+            </div>
+            <div class="stat-card accent-blue">
+              <div class="stat-label">Активних задач</div>
+              <div class="stat-value" id="stat-tasks-active">—</div>
+            </div>
+            <div class="stat-card accent-green">
+              <div class="stat-label">Виконано</div>
+              <div class="stat-value" id="stat-tasks-done">—</div>
+            </div>
+            <div class="stat-card accent-orange">
+              <div class="stat-label">Прострочено</div>
+              <div class="stat-value" id="stat-tasks-overdue">—</div>
+            </div>
+          </div>
+          <div class="section-title">Останні проєкти</div>
+          <div id="dashboard-projects" class="projects-grid"></div>
+        </div>
+
+        <!-- Projects View -->
+        <div id="view-projects" class="view">
+          <div class="view-header">
+            <h1 class="view-title">Проєкти</h1>
+            <button class="btn-primary" id="btn-new-project">+ Новий проєкт</button>
+          </div>
+          <div id="projects-list" class="projects-grid"></div>
+        </div>
+
+        <!-- Project Detail View -->
+        <div id="view-project-detail" class="view">
+          <div class="view-header">
+            <button class="btn-back" id="btn-back-projects">← Назад</button>
+            <h1 class="view-title" id="project-detail-title">Проєкт</h1>
+            <button class="btn-danger" id="btn-delete-project">Видалити проєкт</button>
+            <button class="btn-primary" id="btn-new-task">+ Задача</button>
+          </div>
+          <div class="project-meta" id="project-detail-meta"></div>
+
+          <div class="kanban" id="kanban-board">
+            <div class="kanban-col" data-status="TODO">
+              <div class="kanban-col-header">
+                <span class="col-dot dot-todo"></span> Todo
+                <span class="col-count" id="count-TODO">0</span>
+              </div>
+              <div class="kanban-cards" id="col-TODO"></div>
+            </div>
+            <div class="kanban-col" data-status="IN_PROGRESS">
+              <div class="kanban-col-header">
+                <span class="col-dot dot-inprogress"></span> В процесі
+                <span class="col-count" id="count-IN_PROGRESS">0</span>
+              </div>
+              <div class="kanban-cards" id="col-IN_PROGRESS"></div>
+            </div>
+            <div class="kanban-col" data-status="IN_REVIEW">
+              <div class="kanban-col-header">
+                <span class="col-dot dot-inreview"></span> На перевірці
+                <span class="col-count" id="count-IN_REVIEW">0</span>
+              </div>
+              <div class="kanban-cards" id="col-IN_REVIEW"></div>
+            </div>
+            <div class="kanban-col" data-status="DONE">
+              <div class="kanban-col-header">
+                <span class="col-dot dot-done"></span> Готово
+                <span class="col-count" id="count-DONE">0</span>
+              </div>
+              <div class="kanban-cards" id="col-DONE"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Task Detail View -->
+        <div id="view-task-detail" class="view">
+          <div class="view-header">
+            <button class="btn-back" id="btn-back-project">← До проєкту</button>
+            <div class="task-header-actions">
+              <button class="btn-danger" id="btn-delete-task">Видалити</button>
+            </div>
+          </div>
+          <div class="task-detail-body">
+            <div class="task-detail-main">
+              <div class="task-status-row" id="task-status-row"></div>
+              <h2 class="task-detail-title" id="task-detail-title"></h2>
+              <p class="task-detail-desc" id="task-detail-desc"></p>
+              <div class="task-detail-meta" id="task-detail-meta"></div>
+
+              <div class="comments-section">
+                <div class="section-title">Коментарі</div>
+                <div id="comments-list"></div>
+                <div class="comment-form">
+                  <textarea id="comment-text" placeholder="Додати коментар..."></textarea>
+                  <button class="btn-primary" id="btn-add-comment">Надіслати</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- My Tasks View -->
+        <div id="view-my-tasks" class="view">
+          <div class="view-header">
+            <h1 class="view-title">Мої задачі</h1>
+          </div>
+          <div id="my-tasks-list" class="tasks-list"></div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Modals -->
+  <div id="modal-overlay" class="modal-overlay hidden">
+    <div class="modal" id="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-title">—</h3>
+        <button class="modal-close" id="modal-close">✕</button>
+      </div>
+      <div class="modal-body" id="modal-body"></div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
