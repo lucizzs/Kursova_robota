@@ -3,6 +3,8 @@
 # ============================================================
 # Dockerfile.test — образ для запуску тестів (lint + jest)
 # Використовується сервісом "test" у docker-compose та CI.
+# Має одночасно і unit, і integration тести; режим обирається
+# через CMD або через docker-compose run.
 # ============================================================
 FROM node:20-bookworm-slim
 
@@ -21,10 +23,12 @@ RUN npm ci
 COPY prisma ./prisma
 RUN npx prisma generate
 
-# Конфіги + код + тести
+# Конфіги + код + тести + статика (для тестів, які торкаються public/)
 COPY tsconfig.json jest.config.js .eslintrc.json .prettierrc ./
-COPY src   ./src
-COPY tests ./tests
+COPY src    ./src
+COPY tests  ./tests
+COPY public ./public
 
-# Дефолтна команда — лінтер + юніт-тести
-CMD ["sh", "-c", "npm run lint && npm run test:unit"]
+# Дефолтна команда — повний пайплайн: lint → unit → integration
+# (інтеграційні потребують DATABASE_URL до тестової Postgres та REDIS_URL)
+CMD ["sh", "-c", "npm run lint && npm run test:unit && npm run test:integration"]

@@ -23,7 +23,7 @@ function makeProjectServiceMock(): jest.Mocked<ProjectService> {
   } as unknown as jest.Mocked<ProjectService>;
 }
 
-const dummyTask = (overrides = {}) => ({
+const dummyTask = (overrides: Record<string, unknown> = {}) => ({
   id: 't1',
   title: 'Demo',
   description: null,
@@ -35,6 +35,8 @@ const dummyTask = (overrides = {}) => ({
   createdById: 'u1',
   createdAt: new Date(),
   updatedAt: new Date(),
+  assignee: null,
+  createdBy: { id: 'u1', name: 'Test User', email: 'test@test.com' },
   ...overrides,
 });
 

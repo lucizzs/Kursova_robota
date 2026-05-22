@@ -1,32 +1,5 @@
-# Dependencies
 node_modules/
-
-# Build output
-dist/
-*.tsbuildinfo
-
-# Coverage
 coverage/
-
-# Logs
-*.log
-npm-debug.log*
-
-# Env
+dist/
 .env
-.env.local
-.env.*.local
-!.env.example
-
-# IDE
-.vscode/
-.idea/
-*.swp
 .DS_Store
-
-# Prisma
-prisma/migrations/dev.db*
-
-# Docker volumes
-postgres_data/
-redis_data/

@@ -49,8 +49,10 @@ RUN groupadd --system --gid 1001 nodejs && \
 # Копіюємо тільки те, що потрібно для запуску
 COPY --from=build --chown=nodeapp:nodejs /app/node_modules ./node_modules
 COPY --from=build --chown=nodeapp:nodejs /app/dist        ./dist
+COPY --chown=nodeapp:nodejs public ./public
 COPY --from=build --chown=nodeapp:nodejs /app/prisma      ./prisma
 COPY --from=build --chown=nodeapp:nodejs /app/package.json ./package.json
+COPY --chown=nodeapp:nodejs public ./public
 
 USER nodeapp
 

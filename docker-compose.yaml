@@ -86,11 +86,17 @@ services:
       dockerfile: Dockerfile.test
     image: taskmgr-test:latest
     container_name: taskmgr-test
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     environment:
       NODE_ENV: test
-      DATABASE_URL: postgresql://test:test@db:5432/test?schema=public
+      DATABASE_URL: postgresql://${POSTGRES_USER:-taskmgr}:${POSTGRES_PASSWORD:-changeme_in_prod}@db:5432/${POSTGRES_DB:-taskmgr}?schema=public
       REDIS_URL: redis://redis:6379
       JWT_SECRET: test_secret_at_least_16_chars_long
+      LOG_LEVEL: fatal
     profiles: ["test"]
 
 volumes:

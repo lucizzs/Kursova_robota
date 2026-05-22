@@ -15,6 +15,7 @@ function makeProjectRepoMock(): jest.Mocked<ProjectRepository> {
     findMember: jest.fn(),
     addMember: jest.fn(),
     removeMember: jest.fn(),
+    findMembers: jest.fn(),
   } as unknown as jest.Mocked<ProjectRepository>;
 }
 
@@ -24,6 +25,8 @@ function makeUserRepoMock(): jest.Mocked<UserRepository> {
     findById: jest.fn(),
     findByEmail: jest.fn(),
     existsByEmail: jest.fn(),
+    findByName: jest.fn(),
+    searchByName: jest.fn(),
   } as unknown as jest.Mocked<UserRepository>;
 }
 
@@ -131,5 +134,25 @@ describe('ProjectService', () => {
     expect(await service.getMemberRole('p1', 'u1')).toBe(ProjectRole.MEMBER);
     projects.findMember.mockResolvedValue(null);
     expect(await service.getMemberRole('p1', 'u9')).toBeNull();
+  });
+
+  describe('getMembers', () => {
+    it('повертає членів проєкту для учасника', async () => {
+      projects.findMember.mockResolvedValue(dummyMember(ProjectRole.MEMBER));
+      projects.findMembers.mockResolvedValue([
+        { id: 'u1', name: 'Alice', email: 'a@b.com', role: 'OWNER' },
+        { id: 'u2', name: 'Bob', email: 'b@b.com', role: 'MEMBER' },
+      ]);
+      const res = await service.getMembers('u1', 'p1');
+      expect(res).toHaveLength(2);
+      expect(res[0].name).toBe('Alice');
+      expect(projects.findMembers).toHaveBeenCalledWith('p1');
+    });
+
+    it('кидає 403 для не-учасника', async () => {
+      projects.findMember.mockResolvedValue(null);
+      await expect(service.getMembers('u9', 'p1')).rejects.toThrow(ForbiddenError);
+      expect(projects.findMembers).not.toHaveBeenCalled();
+    });
   });
 });
