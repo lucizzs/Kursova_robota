@@ -63,7 +63,10 @@ export class ProjectService {
     await this.projects.addMember(projectId, newUserId);
   }
 
-  async getMembers(userId: string, projectId: string): Promise<Array<{ id: string; name: string; email: string; role: string }>> {
+  async getMembers(
+    userId: string,
+    projectId: string,
+  ): Promise<Array<{ id: string; name: string; email: string; role: string }>> {
     await this.ensureMember(projectId, userId);
     return this.projects.findMembers(projectId);
   }

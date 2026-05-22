@@ -136,9 +136,7 @@ describe('AuthService', () => {
     });
 
     it('обрізає пробіли і викликає репозиторій', async () => {
-      userRepo.searchByName.mockResolvedValue([
-        { id: 'u1', name: 'Alice', email: 'a@b.com' },
-      ]);
+      userRepo.searchByName.mockResolvedValue([{ id: 'u1', name: 'Alice', email: 'a@b.com' }]);
       const res = await service.searchByName('  Alice  ');
       expect(userRepo.searchByName).toHaveBeenCalledWith('Alice');
       expect(res).toHaveLength(1);

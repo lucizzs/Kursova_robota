@@ -60,8 +60,8 @@ export function createApp(container: AppContainer): Application {
 
   // 404 + error handling (повинні бути останніми)
   app.get('/', (_req, res) => {
-  res.sendFile(path.join(__dirname, '..', '..', 'public', 'index.html'));
-});
+    res.sendFile(path.join(__dirname, '..', '..', 'public', 'index.html'));
+  });
 
   app.use(notFoundHandler);
   app.use(errorHandler);

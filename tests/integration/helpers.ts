@@ -69,14 +69,12 @@ export async function registerUser(
   overrides: Partial<{ email: string; password: string; name: string }> = {},
 ): Promise<{ id: string; email: string; name: string; token: string }> {
   const payload = {
-    email: overrides.email ?? `user${Date.now()}-${Math.random().toString(36).slice(2, 6)}@test.com`,
+    email:
+      overrides.email ?? `user${Date.now()}-${Math.random().toString(36).slice(2, 6)}@test.com`,
     password: overrides.password ?? 'password123',
     name: overrides.name ?? 'Test User',
   };
-  const res = await request(app)
-    .post('/api/v1/auth/register')
-    .send(payload)
-    .expect(201);
+  const res = await request(app).post('/api/v1/auth/register').send(payload).expect(201);
   return {
     id: res.body.user.id,
     email: res.body.user.email,

@@ -60,12 +60,19 @@ export class ProjectRepository {
     });
   }
 
-  async findMembers(projectId: string): Promise<Array<{ id: string; name: string; email: string; role: string }>> {
+  async findMembers(
+    projectId: string,
+  ): Promise<Array<{ id: string; name: string; email: string; role: string }>> {
     const members = await this.prisma.projectMember.findMany({
       where: { projectId },
       include: { user: { select: { id: true, name: true, email: true } } },
       orderBy: { joinedAt: 'asc' },
     });
-    return members.map(m => ({ id: m.user.id, name: m.user.name, email: m.user.email, role: m.role }));
+    return members.map((m) => ({
+      id: m.user.id,
+      name: m.user.name,
+      email: m.user.email,
+      role: m.role,
+    }));
   }
 }

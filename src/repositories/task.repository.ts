@@ -14,7 +14,11 @@ type TaskWithRelations = Prisma.TaskGetPayload<typeof taskWithRelations>;
 export class TaskRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
-  async create(projectId: string, createdById: string, data: CreateTaskDto): Promise<TaskWithRelations> {
+  async create(
+    projectId: string,
+    createdById: string,
+    data: CreateTaskDto,
+  ): Promise<TaskWithRelations> {
     return this.prisma.task.create({
       data: {
         title: data.title,
