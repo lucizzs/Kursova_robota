@@ -1,8 +1,3 @@
-/**
- * Фабрика Express-аплікації. Окремо від server.ts — щоб тести могли
- * створювати застосунок без запуску HTTP-сервера.
- */
-
 import path from 'path';
 import express, { Application } from 'express';
 import cors from 'cors';
@@ -18,7 +13,6 @@ import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 export function createApp(container: AppContainer): Application {
   const app = express();
 
-  // Security headers (з CSP, що дозволяє Google Fonts для фронтенду)
   app.use(
     helmet({
       contentSecurityPolicy: {
@@ -34,11 +28,9 @@ export function createApp(container: AppContainer): Application {
   );
   app.use(cors());
 
-  // Body parser
   app.use(express.json({ limit: '1mb' }));
   app.use(express.static(path.join(__dirname, '..', '..', 'public')));
 
-  // HTTP request logger
   app.use(
     pinoHttp({
       logger,
@@ -49,16 +41,12 @@ export function createApp(container: AppContainer): Application {
       },
     }),
   );
-
-  // Health check (для Docker healthcheck та CI)
+  
   app.get('/healthz', (_req, res) => {
     res.json({ status: 'ok', uptime: process.uptime() });
   });
 
-  // API routes
-  app.use('/api/v1', buildRoutes(container));
-
-  // 404 + error handling (повинні бути останніми)
+  app.use('/api/v1', buildRoutes(container)); 
   app.get('/', (_req, res) => {
     res.sendFile(path.join(__dirname, '..', '..', 'public', 'index.html'));
   });
