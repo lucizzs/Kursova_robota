@@ -1,7 +1,3 @@
-/**
- * ProjectService — бізнес-логіка проєктів та членства.
- * Перевірки доступу (owner/member) виконуються тут, а не в репозиторії.
- */
 import { ProjectRole } from '@prisma/client';
 import { ProjectRepository } from '../repositories/project.repository';
 import { UserRepository } from '../repositories/user.repository';
