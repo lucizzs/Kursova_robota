@@ -1,7 +1,3 @@
-/**
- * StatsService — статистика проєкту з кешуванням у Redis.
- * Якщо Redis недоступний — gracefully fallback на пряме обчислення.
- */
 import { Redis } from 'ioredis';
 import { TaskRepository } from '../repositories/task.repository';
 import { ProjectService } from './project.service';
@@ -27,8 +23,6 @@ export class StatsService {
     await this.projectService.ensureMember(projectId, userId);
 
     const cacheKey = `stats:project:${projectId}`;
-
-    // Спробуємо прочитати з кешу
     try {
       const cached = await this.redis.get(cacheKey);
       if (cached) {
@@ -43,7 +37,6 @@ export class StatsService {
     const total = Object.values(byStatus).reduce((a, b) => a + b, 0);
     const result: ProjectStats = { projectId, byStatus, total, cached: false };
 
-    // Записати в кеш (помилка — не критична)
     try {
       await this.redis.setex(
         cacheKey,
