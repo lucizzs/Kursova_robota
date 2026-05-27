@@ -1,14 +1,7 @@
-/* =====================================================
-   Bloom — фронтенд
-   Виправлений баг створення задачі: payload зібрано
-   з нуля, додаються тільки валідні поля.
-   ===================================================== */
-
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const VALID_PRIORITIES = ['LOW', 'MEDIUM', 'HIGH', 'URGENT'];
 const VALID_STATUSES   = ['TODO', 'IN_PROGRESS', 'IN_REVIEW', 'DONE'];
 
-/* ─── State ─── */
 const state = {
   user: null,
   projects: [],
@@ -22,7 +15,6 @@ const state = {
   globalCalCursor: new Date(),
 };
 
-/* ─── Utils ─── */
 function $(id) { return document.getElementById(id); }
 function el(tag, cls, html) {
   const e = document.createElement(tag);
@@ -86,7 +78,6 @@ function toArray(data) {
   return [];
 }
 
-/* ─── Modal ─── */
 function openModal(title, bodyHTML) {
   $('modal-title').textContent = title;
   $('modal-body').innerHTML = bodyHTML;
@@ -99,9 +90,6 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape' && !$('modal-overlay').classList.contains('hidden')) closeModal();
 });
 
-/* =====================================================
-   AUTH
-   ===================================================== */
 document.querySelectorAll('.auth-tab').forEach(tab => {
   tab.onclick = () => {
     document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
@@ -148,9 +136,6 @@ $('btn-logout').onclick = () => {
   showScreen('screen-auth');
 };
 
-/* =====================================================
-   INIT
-   ===================================================== */
 async function initApp() {
   showScreen('screen-app');
   $('user-name').textContent = state.user.name;
@@ -169,9 +154,6 @@ async function loadProjects() {
   }
 }
 
-/* =====================================================
-   DASHBOARD
-   ===================================================== */
 function greetingByHour() {
   const h = new Date().getHours();
   if (h < 5)  return 'Доброї ночі';
@@ -217,7 +199,6 @@ async function showDashboard() {
   $('stat-tasks-done').textContent = totalDone;
   $('stat-tasks-overdue').textContent = totalOverdue;
 
-  // Сьогодні
   const todayList = $('dashboard-today');
   todayList.innerHTML = '';
   $('today-count').textContent = todayTasks.length ? `${todayTasks.length} зад.` : 'нічого';
@@ -227,7 +208,6 @@ async function showDashboard() {
     todayTasks.slice(0, 8).forEach(t => todayList.appendChild(taskRow(t, true)));
   }
 
-  // Нещодавні проєкти
   const grid = $('dashboard-projects');
   grid.innerHTML = '';
   if (!state.projects.length) {
@@ -252,9 +232,6 @@ function projectCard(p) {
   return card;
 }
 
-/* =====================================================
-   PROJECTS VIEW
-   ===================================================== */
 async function showProjects() {
   showView('projects');
   await loadProjects();
@@ -294,9 +271,6 @@ function modalNewProject() {
 }
 $('btn-new-project').onclick = modalNewProject;
 
-/* =====================================================
-   PROJECT DETAIL
-   ===================================================== */
 async function openProject(id) {
   showView('project-detail');
   // Reset filters and mode
@@ -355,7 +329,6 @@ function renderMode() {
   else if (state.viewMode === 'calendar') renderProjectCalendar();
 }
 
-/* ─── List mode ─── */
 function renderList() {
   const body = $('task-list-body');
   body.innerHTML = '';
@@ -364,7 +337,6 @@ function renderList() {
     body.innerHTML = `<div class="empty-state"><div class="empty-state-text">Немає задач за обраними фільтрами</div></div>`;
     return;
   }
-  // Сортуємо: невиконані за пріоритетом, потім done
   const prioOrder = { URGENT: 0, HIGH: 1, MEDIUM: 2, LOW: 3 };
   tasks.sort((a, b) => {
     if ((a.status === 'DONE') !== (b.status === 'DONE')) return a.status === 'DONE' ? 1 : -1;
@@ -403,7 +375,6 @@ function taskRow(t, compact = false) {
 function priorityLabel(p) { return { LOW: 'Низький', MEDIUM: 'Середній', HIGH: 'Високий', URGENT: 'Терміновий' }[p] || p; }
 function statusLabel(s)   { return { TODO: 'Todo', IN_PROGRESS: 'В процесі', IN_REVIEW: 'На перевірці', DONE: 'Готово' }[s] || s; }
 
-/* ─── Quick add ─── */
 $('quick-task-input').addEventListener('keydown', async e => {
   if (e.key !== 'Enter') return;
   const title = e.target.value.trim();
@@ -417,7 +388,6 @@ $('quick-task-input').addEventListener('keydown', async e => {
   } catch (ex) { showToast(ex.message, 'error'); }
 });
 
-/* ─── Board mode ─── */
 function renderBoard() {
   VALID_STATUSES.forEach(s => {
     $('col-' + s).innerHTML = '';
@@ -486,7 +456,6 @@ function setupDragDrop() {
   });
 }
 
-/* ─── Calendar (project) ─── */
 function renderProjectCalendar() {
   renderCalendar('project-calendar', 'cal-month', state.projectCalCursor, state.currentTasks);
 }
@@ -507,7 +476,6 @@ function renderCalendar(gridId, monthId, cursor, tasks) {
   const m = cursor.getMonth();
   monthLabel.textContent = cursor.toLocaleDateString('uk-UA', { month: 'long', year: 'numeric' });
 
-  // Header weekdays
   const wd = el('div', 'cal-weekdays');
   ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд'].forEach(d => {
     const c = el('div', 'cal-weekday', d);
@@ -523,7 +491,6 @@ function renderCalendar(gridId, monthId, cursor, tasks) {
   const start = new Date(y, m, 1 - offset);
   const today = startOfDay(new Date());
 
-  // 6 тижнів = 42 комірки
   for (let i = 0; i < 42; i++) {
     const d = new Date(start);
     d.setDate(start.getDate() + i);
@@ -551,9 +518,6 @@ function renderCalendar(gridId, monthId, cursor, tasks) {
   root.appendChild(grid);
 }
 
-/* =====================================================
-   PAYLOAD BUILDERS — фікс "Невірні дані запиту"
-   ===================================================== */
 function buildTaskPayload(form, { isUpdate = false } = {}) {
   const payload = {};
   const title = (form.title || '').trim();
@@ -583,9 +547,6 @@ function buildTaskPayload(form, { isUpdate = false } = {}) {
   return payload;
 }
 
-/* =====================================================
-   PROJECT delete
-   ===================================================== */
 $('btn-back-projects').onclick = showProjects;
 $('btn-delete-project').onclick = async () => {
   if (!state.currentProject) return;
@@ -599,9 +560,6 @@ $('btn-delete-project').onclick = async () => {
   } catch (ex) { showToast(ex.message, 'error'); }
 };
 
-/* =====================================================
-   ASSIGNEE search
-   ===================================================== */
 function buildAssigneeField(fieldId, currentName = '') {
   return `
     <div class="assignee-search-wrap">
@@ -656,9 +614,6 @@ function setupAssigneeSearch(inputId, initialId, onSelect) {
   return () => selectedId;
 }
 
-/* =====================================================
-   NEW TASK
-   ===================================================== */
 function openNewTaskModal(projectId, projectName) {
   openModal(`Нова задача · ${projectName || ''}`, `
     <div class="field"><label>Назва</label><input id="m-task-title" placeholder="Що потрібно зробити?" /></div>
@@ -721,7 +676,6 @@ $('btn-new-task').onclick = () => {
   openNewTaskModal(state.currentProject.id, state.currentProject.name);
 };
 
-/* Quick-add з топбару — обираємо проект */
 $('btn-quick-add').onclick = async () => {
   if (!state.projects.length) await loadProjects();
   if (!state.projects.length) {
@@ -764,9 +718,6 @@ $('btn-quick-add').onclick = async () => {
   };
 };
 
-/* =====================================================
-   TASK DETAIL
-   ===================================================== */
 async function openTask(id) {
   showView('task-detail');
   try {
@@ -790,7 +741,6 @@ function renderTaskDetail(t) {
     <div class="meta-item"><div class="meta-item-label">Виконавець</div><div class="meta-item-value">${esc(t.assignee?.name || '—')}</div></div>
     <div class="meta-item"><div class="meta-item-label">Автор</div><div class="meta-item-value">${esc(t.createdBy?.name || t.creator?.name || '—')}</div></div>`;
 
-  // Status buttons
   const row = $('status-change-row');
   row.innerHTML = '<div class="status-change-label">Перевести у:</div>';
   VALID_STATUSES.forEach(s => {
@@ -885,9 +835,6 @@ async function modalEditTask() {
   };
 }
 
-/* =====================================================
-   COMMENTS
-   ===================================================== */
 async function loadComments(taskId) {
   const list = $('comments-list');
   list.innerHTML = '';
@@ -925,9 +872,6 @@ $('btn-add-comment').onclick = async () => {
   } catch (ex) { showToast(ex.message, 'error'); }
 };
 
-/* =====================================================
-   MY TASKS — згрупований список
-   ===================================================== */
 async function showMyTasks() {
   showView('my-tasks');
   const root = $('my-tasks-groups');
@@ -943,7 +887,6 @@ async function showMyTasks() {
       } catch {}
     }
 
-    // Групування
     const groups = {
       overdue:   { title: 'Прострочено',  tasks: [] },
       today:     { title: 'Сьогодні',     tasks: [] },
@@ -990,9 +933,6 @@ async function showMyTasks() {
   }
 }
 
-/* =====================================================
-   GLOBAL CALENDAR
-   ===================================================== */
 async function showCalendar() {
   showView('calendar');
   await loadProjects();
@@ -1016,9 +956,6 @@ $('gcal-next').onclick = () => {
   renderCalendar('global-calendar', 'gcal-month', state.globalCalCursor, state.globalAllTasks || []);
 };
 
-/* =====================================================
-   NAV
-   ===================================================== */
 document.querySelectorAll('.nav-link').forEach(item => {
   item.onclick = () => {
     const view = item.dataset.view;
@@ -1029,9 +966,6 @@ document.querySelectorAll('.nav-link').forEach(item => {
   };
 });
 
-/* =====================================================
-   AUTO-LOGIN
-   ===================================================== */
 (async () => {
   if (api.getToken()) {
     try {
