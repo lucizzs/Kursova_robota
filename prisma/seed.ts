@@ -1,7 +1,3 @@
-/**
- * Seed-скрипт — заповнює БД демонстраційними даними.
- * Запускається разом з міграціями у dev-середовищі.
- */
 import { PrismaClient, TaskStatus, TaskPriority, ProjectRole } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 
