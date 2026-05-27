@@ -1,6 +1,3 @@
-// schema.prisma — модель домену "Менеджер задач"
-// Реляційна БД PostgreSQL, ORM Prisma з міграціями.
-
 generator client {
   provider = "prisma-client-js"
 }
