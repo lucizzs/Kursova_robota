@@ -77,23 +77,19 @@ export class ProjectService {
     await this.projects.removeMember(projectId, memberUserId);
   }
 
-  // ── Допоміжні методи доступу ──
 
-  /** Повертає роль користувача у проєкті або null, якщо він не член. */
   async getMemberRole(projectId: string, userId: string): Promise<ProjectRole | null> {
     const member = await this.projects.findMember(projectId, userId);
     return member?.role ?? null;
   }
 
-  /** Кидає 403, якщо користувач не є членом проєкту. */
   async ensureMember(projectId: string, userId: string): Promise<void> {
     const member = await this.projects.findMember(projectId, userId);
     if (!member) {
       throw new ForbiddenError('Ви не є членом цього проєкту');
     }
   }
-
-  /** Кидає 403, якщо користувач не є власником проєкту. */
+  
   async ensureOwner(projectId: string, userId: string): Promise<void> {
     const member = await this.projects.findMember(projectId, userId);
     if (!member) {
