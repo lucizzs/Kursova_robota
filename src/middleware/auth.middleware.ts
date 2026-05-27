@@ -1,6 +1,3 @@
-/**
- * Auth middleware — перевіряє Bearer-токен, додає req.user.
- */
 import { Request, Response, NextFunction } from 'express';
 import { verifyToken } from '../utils/jwt';
 import { UnauthorizedError } from '../domain/errors';
