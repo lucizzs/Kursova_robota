@@ -33,7 +33,6 @@ export class AuthController {
     }
   };
 
-  // GET /users/search?name=... — пошук користувача за ніком
   searchUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       if (!req.user) throw new UnauthorizedError();
