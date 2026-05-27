@@ -1,7 +1,3 @@
-/**
- * Redis-клієнт для кешування статистики проєктів.
- * Lazy-connect, щоб помилка під'єднання не падала на старті.
- */
 import Redis from 'ioredis';
 import { env } from './env';
 import { logger } from '../utils/logger';
