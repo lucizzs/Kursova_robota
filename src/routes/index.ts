@@ -1,7 +1,3 @@
-/**
- * Маршрутизація API. Базовий префікс — /api/v1.
- * Кожен ендпоінт описаний з валідацією та middleware авторизації.
- */
 import { Router } from 'express';
 import { AppContainer } from '../config/container';
 import { authMiddleware } from '../middleware/auth.middleware';
