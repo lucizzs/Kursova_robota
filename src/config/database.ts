@@ -1,7 +1,3 @@
-/**
- * Єдиний екземпляр Prisma-клієнта (Singleton).
- * Перевикористання з'єднань між запитами.
- */
 import { PrismaClient } from '@prisma/client';
 import { env } from './env';
 
