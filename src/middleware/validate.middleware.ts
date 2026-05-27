@@ -1,6 +1,3 @@
-/**
- * Generic-middleware для валідації тіла, query або params через Zod-схему.
- */
 import { Request, Response, NextFunction } from 'express';
 import { ZodSchema } from 'zod';
 import { ValidationError } from '../domain/errors';
