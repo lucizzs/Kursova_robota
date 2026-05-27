@@ -1,9 +1,3 @@
-/**
- * Доменні помилки.
- * Базовий клас AppError + спеціалізації для різних HTTP-кодів.
- * Помилка містить статус, який глобальний middleware конвертує у відповідь.
- */
-
 export class AppError extends Error {
   public readonly statusCode: number;
   public readonly code: string;
