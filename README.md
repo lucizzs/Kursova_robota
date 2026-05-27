@@ -10,7 +10,7 @@
 ![Tests](https://img.shields.io/badge/tests-69%20passing-brightgreen)
 ![Coverage](https://img.shields.io/badge/coverage-84%25-yellowgreen)
 
-> Повностековий веб-додаток для управління задачами з Kanban-дошкою, командною роботою, аутентифікацією та статистикою. Реалізовано за сучасними підходами проєктування архітектури (Layered/Clean Architecture, Dependency Injection, Repository, DTO, SOLID), повністю контейнеризований через Docker та автоматизований через CI/CD.
+> Повностековий веб-додаток для управління задачами з Kanban-дошкою, командною роботою, аутентифікацією та статистикою. Реалізовано за сучасними підходами проєктування архітектури (Layered/Clean Architecture, Dependency Injection, Repository, DTO, SOLID), повністю контейнеризований через Docker
 
 > **Курсова робота** на тему «Розробка веб-додатку менеджера задач з застосуванням сучасних підходів проєктування архітектури»
 >
