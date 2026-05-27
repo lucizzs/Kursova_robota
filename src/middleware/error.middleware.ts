@@ -1,8 +1,3 @@
-/**
- * Глобальний обробник помилок.
- * Перетворює AppError у структуровану JSON-відповідь.
- * Не-операційні помилки логуються і повертаються як 500.
- */
 import { Request, Response, NextFunction } from 'express';
 import { Prisma } from '@prisma/client';
 import { AppError, NotFoundError, ConflictError } from '../domain/errors';
