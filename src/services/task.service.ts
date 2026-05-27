@@ -1,7 +1,3 @@
-/**
- * TaskService — CRUD задач + пагінація + фільтрація.
- * Делегує перевірку доступу до ProjectService (ensureMember).
- */
 import { TaskRepository } from '../repositories/task.repository';
 import { ProjectService } from './project.service';
 import {
