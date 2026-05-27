@@ -11,13 +11,11 @@ import { createCommentSchema } from '../dto/comment.dto';
 export function buildRoutes(c: AppContainer): Router {
   const router = Router();
 
-  // ── Auth ──
   router.post('/auth/register', validate(registerSchema), c.authController.register);
   router.post('/auth/login', validate(loginSchema), c.authController.login);
   router.get('/auth/me', authMiddleware, c.authController.me);
   router.get('/users/search', authMiddleware, c.authController.searchUsers);
 
-  // ── Projects ──
   router.get('/projects', authMiddleware, c.projectController.list);
   router.post(
     '/projects',
@@ -42,7 +40,6 @@ export function buildRoutes(c: AppContainer): Router {
   );
   router.delete('/projects/:id/members/:userId', authMiddleware, c.projectController.removeMember);
 
-  // ── Tasks (nested під проєкт) ──
   router.get(
     '/projects/:projectId/tasks',
     authMiddleware,
@@ -56,12 +53,10 @@ export function buildRoutes(c: AppContainer): Router {
     c.taskController.create,
   );
 
-  // ── Tasks (за id) ──
   router.get('/tasks/:id', authMiddleware, c.taskController.getById);
   router.patch('/tasks/:id', authMiddleware, validate(updateTaskSchema), c.taskController.update);
   router.delete('/tasks/:id', authMiddleware, c.taskController.remove);
 
-  // ── Comments ──
   router.get('/tasks/:taskId/comments', authMiddleware, c.commentController.list);
   router.post(
     '/tasks/:taskId/comments',
@@ -71,7 +66,6 @@ export function buildRoutes(c: AppContainer): Router {
   );
   router.delete('/comments/:id', authMiddleware, c.commentController.remove);
 
-  // ── Stats ──
   router.get('/projects/:projectId/stats', authMiddleware, c.statsController.projectStats);
 
   return router;
