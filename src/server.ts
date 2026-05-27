@@ -1,8 +1,4 @@
 import 'dotenv/config';
-/**
- * Точка входу — створює застосунок і запускає HTTP-сервер.
- * Обробляє SIGTERM/SIGINT для graceful shutdown.
- */
 import { env } from './config/env';
 import { prisma, disconnectDatabase } from './config/database';
 import { redis, connectRedis, disconnectRedis } from './config/redis';
@@ -30,7 +26,6 @@ async function bootstrap(): Promise<void> {
       logger.info("З'єднання закриті, вихід.");
       process.exit(0);
     });
-    // Якщо не закрилось за 10 секунд — примусово
     setTimeout(() => {
       logger.error('Не вдалось коректно завершити роботу — force exit');
       process.exit(1);
