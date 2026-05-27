@@ -3,7 +3,6 @@ import { verifyToken } from '../utils/jwt';
 import { UnauthorizedError } from '../domain/errors';
 
 declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Express {
     interface Request {
       user?: { id: string; email: string };
