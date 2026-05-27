@@ -1,12 +1,3 @@
-# docker-compose.yaml
-# Запуск: docker-compose up -d
-# Сервіси:
-#   - db       PostgreSQL 16 (БД додатку)
-#   - redis    Redis 7       (кеш статистики)
-#   - app      Сам Node.js додаток (Express + Prisma)
-#   - adminer  Веб-UI для перегляду БД (опціонально, профіль "dev-tools")
-#   - test     Контейнер для запуску lint + юніт-тестів (профіль "test")
-
 services:
   db:
     image: postgres:16-alpine
